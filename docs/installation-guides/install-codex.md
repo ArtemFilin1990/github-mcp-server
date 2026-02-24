@@ -41,9 +41,48 @@ echo -e ".env" >> .gitignore
 ```
 </details>
 
-## Local Docker Configuration
+## Local Server Configuration (STDIO)
 
-Use this if you prefer a local, self-hosted instance instead of the remote HTTP server, please refer to the [OpenAI documentation for configuration](https://developers.openai.com/codex/mcp).
+Use this if you prefer a local, self-hosted instance instead of the remote HTTP server.
+
+### With Docker
+
+Edit `~/.codex/config.toml` and add:
+
+```toml
+[mcp_servers.github]
+command = "docker"
+args = ["run", "-i", "--rm", "-e", "GITHUB_PERSONAL_ACCESS_TOKEN", "ghcr.io/github/github-mcp-server"]
+
+[mcp_servers.github.env]
+GITHUB_PERSONAL_ACCESS_TOKEN = "YOUR_GITHUB_PAT"
+```
+
+Or add it via the Codex CLI:
+
+```bash
+codex mcp add github --env GITHUB_PERSONAL_ACCESS_TOKEN=YOUR_GITHUB_PAT -- docker run -i --rm -e GITHUB_PERSONAL_ACCESS_TOKEN ghcr.io/github/github-mcp-server
+```
+
+### With a Binary (no Docker)
+
+1. Download a [release binary](https://github.com/github/github-mcp-server/releases) and add it to your `PATH`.
+2. Edit `~/.codex/config.toml` and add:
+
+```toml
+[mcp_servers.github]
+command = "github-mcp-server"
+args = ["stdio"]
+
+[mcp_servers.github.env]
+GITHUB_PERSONAL_ACCESS_TOKEN = "YOUR_GITHUB_PAT"
+```
+
+Or add it via the Codex CLI:
+
+```bash
+codex mcp add github --env GITHUB_PERSONAL_ACCESS_TOKEN=YOUR_GITHUB_PAT -- github-mcp-server stdio
+```
 
 ## Verification
 
