@@ -20,8 +20,8 @@ bearer_token_env_var = "GITHUB_PAT_TOKEN"
 
 You can also add it via the Codex CLI:
 
-```cli
-codex mcp add github --url https://api.githubcopilot.com/mcp/  
+```bash
+codex mcp add github --url https://api.githubcopilot.com/mcp/
 ```
 
 <details>
@@ -43,7 +43,24 @@ echo -e ".env" >> .gitignore
 
 ## Local Docker Configuration
 
-Use this if you prefer a local, self-hosted instance instead of the remote HTTP server, please refer to the [OpenAI documentation for configuration](https://developers.openai.com/codex/mcp).
+Use this if you prefer a local, self-hosted instance instead of the remote HTTP server. [Docker](https://www.docker.com/) must be installed and running.
+
+Edit `~/.codex/config.toml` and add:
+
+```toml
+[mcp_servers.github]
+command = "docker"
+args = ["run", "-i", "--rm", "-e", "GITHUB_PERSONAL_ACCESS_TOKEN", "ghcr.io/github/github-mcp-server"]
+
+[mcp_servers.github.env]
+GITHUB_PERSONAL_ACCESS_TOKEN = "YOUR_GITHUB_PAT"
+```
+
+Or add it via the Codex CLI (replace `YOUR_GITHUB_PAT` with your token, or use `$GITHUB_PERSONAL_ACCESS_TOKEN` to read it from the current environment instead of passing it directly):
+
+```bash
+codex mcp add github --env GITHUB_PERSONAL_ACCESS_TOKEN=YOUR_GITHUB_PAT -- docker run -i --rm -e GITHUB_PERSONAL_ACCESS_TOKEN ghcr.io/github/github-mcp-server
+```
 
 ## Verification
 
